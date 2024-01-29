@@ -32,17 +32,31 @@
   (add-hook 'emacs-startup-hook
             (lambda () (setq gc-cons-threshold normal-gc-cons-threshold))))
 
+;; Add transparency before applying themes
+(set-frame-parameter nil 'alpha-background 90)
+(add-to-list 'default-frame-alist '(alpha-background . 90))
+
 (require 'init-themes)
 (require 'init-ui)
 (require 'init-dired)
 (require 'init-evil)
 (require 'init-key-chord)
 (require 'init-helm)
+(require 'init-terraform)
+
+;; For some reasons, my org mode file isn't highlighted anymore, quick fix ahead
+(add-hook 'find-file-hook 'my-org-mode-file-hook)
+(defun my-org-mode-file-hook ()
+  (when (string= (file-name-extension buffer-file-name) "org")
+    (org-mode)))
 
 ;; TODO Put in its corresponding file
 (define-key global-map (kbd "RET") 'newline-and-indent)
 
 (setq backup-directory-alist '(("." . "~/.emacs-backup")))
+
+;; Suppress those annoying Warning buffer popping on while I'm working on stuff
+(setq native-comp-async-report-warnings-errors 'silent)
 
 ;;(define-key global-map (kbd "C-c ;") 'iedit-mode)
 (global-set-key (kbd "M-x") 'helm-M-x)
